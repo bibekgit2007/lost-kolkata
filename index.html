@@ -52,8 +52,8 @@
             </ul>
 
             <div class="nav-actions">
-                <button id="nav-ambient-toggle" class="nav-audio-btn" aria-label="Toggle 1890 Ambient Soundscape" title="Toggle 1890 Audio Atmosphere">
-                    🔊
+                <button id="nav-ambient-toggle" class="nav-audio-btn" aria-label="Play / Pause Theme Song 'From Calcutta to Kolkata'" title="Play / Pause 'From Calcutta to Kolkata'">
+                    🎵
                 </button>
                 <button class="mobile-toggle" id="mobile-menu-toggle" aria-label="Open navigation menu">☰</button>
             </div>
@@ -104,6 +104,60 @@
                     </div>
                 </div>
 
+                <!-- Official Theme Music Player: "From Calcutta to Kolkata" -->
+                <div class="hero-theme-player" id="hero-theme-player">
+                    <div class="theme-player-dock">
+                        <button class="theme-play-btn" id="btn-theme-song-play" aria-label="Play 'From Calcutta to Kolkata' Theme Song" title="Play / Pause Theme Song">
+                            <span class="theme-play-icon" id="theme-play-icon">▶</span>
+                            <span class="theme-pulse-ring" id="theme-pulse-ring"></span>
+                        </button>
+
+                        <div class="theme-track-info">
+                            <div class="theme-track-badge">
+                                <span class="badge-dot">●</span> মূল আবহ সঙ্গীত • OFFICIAL THEME SONG
+                            </div>
+                            <div class="theme-track-title">From Calcutta to Kolkata</div>
+                            <div class="theme-track-sub">A Song About a City That Changed • Emotional Indie Ballad</div>
+                        </div>
+
+                        <!-- Equalizer Animation Bars -->
+                        <div class="theme-equalizer" id="theme-equalizer" aria-hidden="true">
+                            <span class="eq-bar bar-1"></span>
+                            <span class="eq-bar bar-2"></span>
+                            <span class="eq-bar bar-3"></span>
+                            <span class="eq-bar bar-4"></span>
+                        </div>
+
+                        <div class="theme-track-actions">
+                            <button class="btn-theme-video-toggle" id="btn-toggle-video-view" aria-label="Toggle Video Player" title="ভিডিও দৃশ্যমান করুন • View Cinematic Video">
+                                <span>📺</span>
+                                <span class="video-btn-text">ভিডিও / Video</span>
+                            </button>
+                            <a href="https://www.youtube.com/watch?v=vUxgTcHk_7Q" target="_blank" rel="noopener noreferrer" class="btn-theme-yt-link" title="Open on YouTube">
+                                ↗
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Collapsible Video Drawer -->
+                    <div class="theme-video-drawer" id="theme-video-drawer">
+                        <div class="theme-video-frame-wrap">
+                            <iframe id="theme-youtube-iframe"
+                                src="https://www.youtube-nocookie.com/embed/vUxgTcHk_7Q?enablejsapi=1&origin=https://lost-kolkata.github.io&rel=0&modestbranding=1"
+                                title="From Calcutta to Kolkata | A Song About a City That Changed"
+                                frameborder="0"
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                                allowfullscreen
+                                loading="lazy">
+                            </iframe>
+                        </div>
+                        <div class="video-credit-bar">
+                            <span class="video-credit-text">🎵 <em>"From Calcutta to Kolkata"</em> — An emotional indie ballad exploring two centuries of heritage and transformation</span>
+                            <span class="video-credit-tag">YouTube • vUxgTcHk_7Q</span>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="hero-cta-group">
                     <a href="#timelens" class="btn-primary" id="btn-hero-excavate">
                         <span>🔍</span>
@@ -111,10 +165,10 @@
                             <strong>অন্বেষণ শুরু করুন</strong> • Begin the Journey
                         </span>
                     </a>
-                    <button class="btn-secondary" id="ambient-toggle-btn">
-                        <span>🎧</span>
+                    <button class="btn-secondary" id="ambient-toggle-btn" title="Play / Pause 'From Calcutta to Kolkata'">
+                        <span>🎵</span>
                         <span class="btn-text">
-                            <strong>১৮৯০-এর আবহধ্বনি</strong> • 1890s Soundscape
+                            <strong>থিম সঙ্গীত বাজান</strong> • Play Theme Song
                         </span>
                     </button>
                 </div>

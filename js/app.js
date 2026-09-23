@@ -7,6 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initDustCanvas();
     initTimeLens();
     initMapHotspots();
+    initThemeSongPlayer();
     initSoundscapeControls();
     initMemoryVault();
     initHeritageQuest();
@@ -375,45 +376,123 @@ function initMapHotspots() {
 }
 
 /* ==========================================================================
-   4. Audio Archaeology Controls & Soundboard Mixer
+   4. Official Theme Song Player: "From Calcutta to Kolkata" (Emotional Indie Ballad)
+   YouTube ID: vUxgTcHk_7Q
+   ========================================================================== */
+function initThemeSongPlayer() {
+    const playBtn = document.getElementById('btn-theme-song-play');
+    const heroPlayer = document.getElementById('hero-theme-player');
+    const playIcon = document.getElementById('theme-play-icon');
+    const videoToggleBtn = document.getElementById('btn-toggle-video-view');
+    const videoDrawer = document.getElementById('theme-video-drawer');
+    const ytIframe = document.getElementById('theme-youtube-iframe');
+    const heroCtaSoundBtn = document.getElementById('ambient-toggle-btn');
+    const navSoundBtn = document.getElementById('nav-ambient-toggle');
+
+    let isPlaying = false;
+    let isVideoOpen = false;
+
+    function sendYtCommand(func, args = []) {
+        if (!ytIframe || !ytIframe.contentWindow) return;
+        ytIframe.contentWindow.postMessage(JSON.stringify({
+            event: 'command',
+            func: func,
+            args: args
+        }), '*');
+    }
+
+    function setPlaybackState(playing) {
+        isPlaying = playing;
+        if (playBtn) playBtn.classList.toggle('is-playing', isPlaying);
+        if (heroPlayer) heroPlayer.classList.toggle('playing', isPlaying);
+        if (playIcon) playIcon.textContent = isPlaying ? '⏸' : '▶';
+
+        if (heroCtaSoundBtn) {
+            heroCtaSoundBtn.classList.toggle('playing', isPlaying);
+            const btnText = heroCtaSoundBtn.querySelector('.btn-text');
+            if (btnText) {
+                btnText.innerHTML = isPlaying 
+                    ? '<strong>সঙ্গীত চলছে</strong> • Pause Theme' 
+                    : '<strong>থিম সঙ্গীত বাজান</strong> • Play Theme Song';
+            }
+        }
+
+        if (navSoundBtn) {
+            navSoundBtn.classList.toggle('playing', isPlaying);
+            navSoundBtn.title = isPlaying 
+                ? 'Playing: From Calcutta to Kolkata (Click to Pause)' 
+                : 'Play Theme: From Calcutta to Kolkata';
+        }
+    }
+
+    function playAudio() {
+        if (!ytIframe) return;
+        let currentSrc = ytIframe.src;
+        if (!currentSrc.includes('autoplay=1')) {
+            ytIframe.src = currentSrc + (currentSrc.includes('?') ? '&' : '?') + 'autoplay=1';
+        } else {
+            sendYtCommand('playVideo');
+        }
+        setPlaybackState(true);
+    }
+
+    function pauseAudio() {
+        sendYtCommand('pauseVideo');
+        setPlaybackState(false);
+    }
+
+    function togglePlay() {
+        if (!isPlaying) {
+            playAudio();
+        } else {
+            pauseAudio();
+        }
+    }
+
+    function toggleVideoDrawer() {
+        isVideoOpen = !isVideoOpen;
+        if (videoDrawer) {
+            videoDrawer.classList.toggle('open', isVideoOpen);
+        }
+        if (videoToggleBtn) {
+            const label = videoToggleBtn.querySelector('.video-btn-text');
+            if (label) {
+                label.textContent = isVideoOpen ? 'ভিডিও লুকান • Hide Video' : 'ভিডিও / Video';
+            }
+        }
+        if (isVideoOpen && !isPlaying) {
+            playAudio();
+        }
+    }
+
+    if (playBtn) playBtn.addEventListener('click', togglePlay);
+    if (videoToggleBtn) videoToggleBtn.addEventListener('click', toggleVideoDrawer);
+
+    if (heroCtaSoundBtn) {
+        heroCtaSoundBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            togglePlay();
+        });
+    }
+
+    if (navSoundBtn) {
+        navSoundBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            togglePlay();
+        });
+    }
+}
+
+/* ==========================================================================
+   4B. Audio Archaeology Soundboard & Ambient Volume Controls
    ========================================================================== */
 function initSoundscapeControls() {
-    const ambientBtn = document.getElementById('ambient-toggle-btn');
-    const navAmbientBtn = document.getElementById('nav-ambient-toggle');
     const volumeSlider = document.getElementById('ambient-volume-slider');
 
     const btnTram = document.getElementById('snd-tram-bell');
     const btnSteamer = document.getElementById('snd-steamer-horn');
     const btnTemple = document.getElementById('snd-temple-bell');
     const btnPress = document.getElementById('snd-press-click');
-
-    function updateAmbientUI(isPlaying) {
-        const text = isPlaying ? 'Mute Atmosphere' : 'Enable 1890s Soundscape';
-        if (ambientBtn) {
-            ambientBtn.classList.toggle('playing', isPlaying);
-            ambientBtn.querySelector('.btn-text').textContent = text;
-        }
-        if (navAmbientBtn) {
-            navAmbientBtn.classList.toggle('playing', isPlaying);
-            navAmbientBtn.title = isPlaying ? 'Soundscape Active' : 'Soundscape Inactive';
-        }
-    }
-
-    if (window.soundEngine) {
-        window.soundEngine.subscribe(updateAmbientUI);
-    }
-
-    if (ambientBtn) {
-        ambientBtn.addEventListener('click', () => {
-            if (window.soundEngine) window.soundEngine.toggleAmbient();
-        });
-    }
-
-    if (navAmbientBtn) {
-        navAmbientBtn.addEventListener('click', () => {
-            if (window.soundEngine) window.soundEngine.toggleAmbient();
-        });
-    }
 
     if (volumeSlider) {
         volumeSlider.addEventListener('input', (e) => {
@@ -422,7 +501,7 @@ function initSoundscapeControls() {
         });
     }
 
-    // One-shot triggers
+    // Interactive 1890 soundboard one-shots
     if (btnTram) btnTram.addEventListener('click', () => window.soundEngine && window.soundEngine.playTramBell());
     if (btnSteamer) btnSteamer.addEventListener('click', () => window.soundEngine && window.soundEngine.playSteamerHorn());
     if (btnTemple) btnTemple.addEventListener('click', () => window.soundEngine && window.soundEngine.playTempleBell());
