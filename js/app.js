@@ -20,27 +20,42 @@ document.addEventListener('DOMContentLoaded', () => {
 function initDustCanvas() {
     const canvas = document.getElementById('dust-canvas');
     if (!canvas) return;
-    const ctx = canvas.getContext('2d');
 
+    // Completely disable on mobile/touch screens to ensure zero scroll lag on Android/iOS
+    const isMobile = window.innerWidth <= 900 || 
+                     window.matchMedia('(pointer: coarse)').matches ||
+                     /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+
+    if (isMobile) {
+        canvas.style.display = 'none';
+        return;
+    }
+
+    const ctx = canvas.getContext('2d');
     let width = canvas.width = window.innerWidth;
     let height = canvas.height = window.innerHeight;
 
     window.addEventListener('resize', () => {
+        if (window.innerWidth <= 900) {
+            canvas.style.display = 'none';
+            return;
+        }
+        canvas.style.display = 'block';
         width = canvas.width = window.innerWidth;
         height = canvas.height = window.innerHeight;
-    });
+    }, { passive: true });
 
     const particles = [];
-    const particleCount = Math.min(width > 768 ? 45 : 25, 50);
+    const particleCount = 28;
 
     for (let i = 0; i < particleCount; i++) {
         particles.push({
             x: Math.random() * width,
             y: Math.random() * height,
-            radius: Math.random() * 1.8 + 0.6,
-            speedY: - (Math.random() * 0.4 + 0.15),
-            speedX: (Math.random() - 0.5) * 0.25,
-            opacity: Math.random() * 0.5 + 0.15,
+            radius: Math.random() * 1.6 + 0.6,
+            speedY: - (Math.random() * 0.35 + 0.12),
+            speedX: (Math.random() - 0.5) * 0.2,
+            opacity: Math.random() * 0.45 + 0.15,
             pulseSpeed: Math.random() * 0.02 + 0.005
         });
     }
@@ -58,12 +73,10 @@ function initDustCanvas() {
             if (p.x < 0) p.x = width;
             if (p.x > width) p.x = 0;
 
-            const alpha = Math.max(0.1, Math.min(0.6, p.opacity));
+            const alpha = Math.max(0.1, Math.min(0.55, p.opacity));
             ctx.beginPath();
             ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
             ctx.fillStyle = `rgba(225, 185, 120, ${alpha})`;
-            ctx.shadowBlur = 4;
-            ctx.shadowColor = 'rgba(212, 175, 55, 0.4)';
             ctx.fill();
         });
 
@@ -74,6 +87,7 @@ function initDustCanvas() {
 
 /* ==========================================================================
    2. Interactive Time Slider (1826 Colonial Calcutta -> 2026 Modern Kolkata)
+   Gesture-aware: vertical scrolls pass through cleanly; horizontal slides smoothly
    ========================================================================== */
 function initTimeLens() {
     const container = document.getElementById('timelens-wrapper');
@@ -83,17 +97,41 @@ function initTimeLens() {
     const depthMeter = document.getElementById('excavation-depth-fill');
     const timespanLabel = document.getElementById('meter-timespan-label');
 
+    const preset1826 = document.getElementById('btn-preset-1826');
+    const preset2026 = document.getElementById('btn-preset-2026');
+    const presetSplit = document.getElementById('btn-preset-split');
+
     if (!container || !vintageLayer || !handle) return;
 
     let isDragging = false;
+    let touchStartX = 0;
+    let touchStartY = 0;
+    let isTrackingTouch = false;
+    let isHorizontalGesture = false;
 
-    function updateSlider(percent) {
+    function setPresetActive(activeBtn) {
+        [preset1826, presetSplit, preset2026].forEach(btn => {
+            if (btn) btn.classList.remove('active');
+        });
+        if (activeBtn) activeBtn.classList.add('active');
+    }
+
+    function updateSlider(percent, triggerBtn = null) {
         // Clamp between 2% and 98%
         const clamped = Math.max(2, Math.min(98, percent));
         vintageLayer.style.width = `${clamped}%`;
         handle.style.left = `${clamped}%`;
 
-        // Update year readout dynamically based on depth
+        // Update active preset button highlight
+        if (triggerBtn) {
+            setPresetActive(triggerBtn);
+        } else {
+            if (clamped >= 85) setPresetActive(preset1826);
+            else if (clamped <= 15) setPresetActive(preset2026);
+            else if (Math.abs(clamped - 50) < 15) setPresetActive(presetSplit);
+            else setPresetActive(null);
+        }
+
         // 0% (right) = 2026 Modern -> 100% (left revealed) = 1826 Colonial Calcutta
         const yearsUnearthed = Math.round((clamped / 100) * 200);
         const year = Math.round(2026 - yearsUnearthed);
@@ -117,52 +155,89 @@ function initTimeLens() {
         }
     }
 
-    function getPercentFromEvent(e) {
+    function getPercentFromX(clientX) {
         const rect = container.getBoundingClientRect();
-        const clientX = e.touches ? e.touches[0].clientX : e.clientX;
         const x = clientX - rect.left;
         return (x / rect.width) * 100;
     }
 
+    // --- Desktop Mouse Dragging ---
     container.addEventListener('mousedown', (e) => {
         isDragging = true;
-        updateSlider(getPercentFromEvent(e));
+        updateSlider(getPercentFromX(e.clientX));
     });
 
     window.addEventListener('mousemove', (e) => {
         if (!isDragging) return;
-        updateSlider(getPercentFromEvent(e));
+        requestAnimationFrame(() => updateSlider(getPercentFromX(e.clientX)));
     });
 
     window.addEventListener('mouseup', () => {
         isDragging = false;
     });
 
-    container.addEventListener('touchstart', (e) => {
+    // --- Mobile Touch Gestures (Zero-Scroll-Lag & Direction Disambiguation) ---
+    // Handle disc direct drag:
+    handle.addEventListener('touchstart', (e) => {
         isDragging = true;
-        updateSlider(getPercentFromEvent(e));
+        isHorizontalGesture = true;
+    }, { passive: true });
+
+    container.addEventListener('touchstart', (e) => {
+        if (!e.touches || !e.touches[0]) return;
+        touchStartX = e.touches[0].clientX;
+        touchStartY = e.touches[0].clientY;
+        isTrackingTouch = true;
+        isHorizontalGesture = false;
     }, { passive: true });
 
     window.addEventListener('touchmove', (e) => {
-        if (!isDragging) return;
-        updateSlider(getPercentFromEvent(e));
+        if (!isTrackingTouch && !isDragging) return;
+        if (!e.touches || !e.touches[0]) return;
+
+        const curX = e.touches[0].clientX;
+        const curY = e.touches[0].clientY;
+        const diffX = Math.abs(curX - touchStartX);
+        const diffY = Math.abs(curY - touchStartY);
+
+        // If the movement is primarily vertical, abort slider dragging so native phone scrolling proceeds silky-smooth!
+        if (!isHorizontalGesture) {
+            if (diffY > diffX && diffY > 6) {
+                isTrackingTouch = false;
+                isDragging = false;
+                return;
+            }
+            if (diffX > diffY && diffX > 8) {
+                isHorizontalGesture = true;
+                isDragging = true;
+            }
+        }
+
+        if (isDragging && isHorizontalGesture) {
+            requestAnimationFrame(() => updateSlider(getPercentFromX(curX)));
+        }
     }, { passive: true });
 
-    window.addEventListener('touchend', () => {
+    window.addEventListener('touchend', (e) => {
+        // If it was a quick stationary tap, jump to tapped position
+        if (isTrackingTouch && !isHorizontalGesture) {
+            const touch = e.changedTouches ? e.changedTouches[0] : null;
+            if (touch) {
+                updateSlider(getPercentFromX(touch.clientX));
+            }
+        }
         isDragging = false;
+        isTrackingTouch = false;
+        isHorizontalGesture = false;
     });
 
-    // Preset quick buttons
-    const preset1826 = document.getElementById('btn-preset-1826');
-    const preset2026 = document.getElementById('btn-preset-2026');
-    const presetSplit = document.getElementById('btn-preset-split');
+    // Preset quick buttons (easy touch targets)
+    if (preset1826) preset1826.addEventListener('click', () => updateSlider(96, preset1826));
+    if (preset2026) preset2026.addEventListener('click', () => updateSlider(4, preset2026));
+    if (presetSplit) presetSplit.addEventListener('click', () => updateSlider(50, presetSplit));
 
-    if (preset1826) preset1826.addEventListener('click', () => updateSlider(96));
-    if (preset2026) preset2026.addEventListener('click', () => updateSlider(4));
-    if (presetSplit) presetSplit.addEventListener('click', () => updateSlider(50));
-
-    // Initialize at 50% split
-    updateSlider(50);
+    // Initialize at 50% split with active button
+    updateSlider(50, presetSplit);
 }
 
 /* ==========================================================================
@@ -648,6 +723,17 @@ function initHeritageQuest() {
    ========================================================================== */
 function initNavigationScroll() {
     const navLinks = document.querySelectorAll('.nav-link[href^="#"]');
+    const mobileToggle = document.getElementById('mobile-menu-toggle');
+    const navMenu = document.getElementById('main-nav-links');
+
+    function closeMobileMenu() {
+        if (navMenu) navMenu.classList.remove('open');
+        if (mobileToggle) {
+            mobileToggle.textContent = '☰';
+            mobileToggle.setAttribute('aria-expanded', 'false');
+        }
+    }
+
     navLinks.forEach(link => {
         link.addEventListener('click', (e) => {
             const targetId = link.getAttribute('href').substring(1);
@@ -655,16 +741,24 @@ function initNavigationScroll() {
             if (targetEl) {
                 e.preventDefault();
                 targetEl.scrollIntoView({ behavior: 'smooth' });
+                closeMobileMenu();
             }
         });
     });
 
-    // Mobile nav toggle
-    const mobileToggle = document.getElementById('mobile-menu-toggle');
-    const navMenu = document.getElementById('main-nav-links');
     if (mobileToggle && navMenu) {
-        mobileToggle.addEventListener('click', () => {
-            navMenu.classList.toggle('open');
+        mobileToggle.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const isOpen = navMenu.classList.toggle('open');
+            mobileToggle.textContent = isOpen ? '✕' : '☰';
+            mobileToggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+        });
+
+        // Close on tap outside
+        document.addEventListener('click', (e) => {
+            if (navMenu.classList.contains('open') && !navMenu.contains(e.target) && e.target !== mobileToggle) {
+                closeMobileMenu();
+            }
         });
     }
 }
@@ -678,9 +772,11 @@ function escapeHtml(str) {
 
 /* ==========================================================================
    8. Rajbari Courtyard Before & After Slider (CSS clip-path & Vintage Key Handle)
+   Zero scroll trap: vertical gestures scroll page freely; horizontal swipes slide
    ========================================================================== */
 function initRajbariSlider() {
     const sliderWrapper = document.getElementById('rajbariSlider');
+    const sliderHandle = document.getElementById('sliderHandle');
     const srRange = document.getElementById('srSliderRange');
     const btnSketch = document.getElementById('btn-rajbari-sketch');
     const btnSplit = document.getElementById('btn-rajbari-split');
@@ -689,40 +785,116 @@ function initRajbariSlider() {
     if (!sliderWrapper) return;
 
     let isDragging = false;
+    let touchStartX = 0;
+    let touchStartY = 0;
+    let isTrackingTouch = false;
+    let isHorizontalGesture = false;
 
-    function setSliderPercent(percent) {
+    function setPresetActive(activeBtn) {
+        [btnSketch, btnSplit, btnDecay].forEach(btn => {
+            if (btn) btn.classList.remove('active');
+        });
+        if (activeBtn) activeBtn.classList.add('active');
+    }
+
+    function setSliderPercent(percent, triggerBtn = null) {
         const clamped = Math.max(0, Math.min(100, percent));
         sliderWrapper.style.setProperty('--clip-pos', `${clamped}%`);
         if (srRange) srRange.value = clamped;
+
+        if (triggerBtn) {
+            setPresetActive(triggerBtn);
+        } else {
+            if (clamped >= 85) setPresetActive(btnSketch);
+            else if (clamped <= 15) setPresetActive(btnDecay);
+            else if (Math.abs(clamped - 50) < 15) setPresetActive(btnSplit);
+            else setPresetActive(null);
+        }
     }
 
-    function getPercent(e) {
+    function getPercentFromX(clientX) {
         const rect = sliderWrapper.getBoundingClientRect();
-        const clientX = e.touches ? e.touches[0].clientX : e.clientX;
         const x = clientX - rect.left;
         return Math.max(0, Math.min(100, (x / rect.width) * 100));
     }
 
-    sliderWrapper.addEventListener('pointerdown', (e) => {
+    // --- Desktop Mouse Dragging ---
+    sliderWrapper.addEventListener('mousedown', (e) => {
         isDragging = true;
         sliderWrapper.classList.add('is-dragging');
-        sliderWrapper.setPointerCapture(e.pointerId);
-        setSliderPercent(getPercent(e));
+        setSliderPercent(getPercentFromX(e.clientX));
     });
 
-    sliderWrapper.addEventListener('pointermove', (e) => {
+    window.addEventListener('mousemove', (e) => {
         if (!isDragging) return;
-        requestAnimationFrame(() => setSliderPercent(getPercent(e)));
+        requestAnimationFrame(() => setSliderPercent(getPercentFromX(e.clientX)));
     });
 
-    sliderWrapper.addEventListener('pointerup', (e) => {
-        isDragging = false;
-        sliderWrapper.classList.remove('is-dragging');
-        try { sliderWrapper.releasePointerCapture(e.pointerId); } catch(err) {}
+    window.addEventListener('mouseup', () => {
+        if (isDragging) {
+            isDragging = false;
+            sliderWrapper.classList.remove('is-dragging');
+        }
     });
 
-    sliderWrapper.addEventListener('pointercancel', (e) => {
+    // --- Mobile Touch Gestures (Zero-Scroll-Lag & Direction Disambiguation) ---
+    const keyDisc = sliderHandle ? sliderHandle.querySelector('.handle-key-disc') : null;
+    if (keyDisc) {
+        keyDisc.addEventListener('touchstart', (e) => {
+            isDragging = true;
+            isHorizontalGesture = true;
+            sliderWrapper.classList.add('is-dragging');
+        }, { passive: true });
+    }
+
+    sliderWrapper.addEventListener('touchstart', (e) => {
+        if (!e.touches || !e.touches[0]) return;
+        touchStartX = e.touches[0].clientX;
+        touchStartY = e.touches[0].clientY;
+        isTrackingTouch = true;
+        isHorizontalGesture = false;
+    }, { passive: true });
+
+    window.addEventListener('touchmove', (e) => {
+        if (!isTrackingTouch && !isDragging) return;
+        if (!e.touches || !e.touches[0]) return;
+
+        const curX = e.touches[0].clientX;
+        const curY = e.touches[0].clientY;
+        const diffX = Math.abs(curX - touchStartX);
+        const diffY = Math.abs(curY - touchStartY);
+
+        // If movement is vertical, cancel drag so native page scroll runs at 60fps!
+        if (!isHorizontalGesture) {
+            if (diffY > diffX && diffY > 6) {
+                isTrackingTouch = false;
+                isDragging = false;
+                sliderWrapper.classList.remove('is-dragging');
+                return;
+            }
+            if (diffX > diffY && diffX > 8) {
+                isHorizontalGesture = true;
+                isDragging = true;
+                sliderWrapper.classList.add('is-dragging');
+            }
+        }
+
+        if (isDragging && isHorizontalGesture) {
+            requestAnimationFrame(() => setSliderPercent(getPercentFromX(curX)));
+        }
+    }, { passive: true });
+
+    window.addEventListener('touchend', (e) => {
+        // Stationary tap
+        if (isTrackingTouch && !isHorizontalGesture) {
+            const touch = e.changedTouches ? e.changedTouches[0] : null;
+            if (touch) {
+                setSliderPercent(getPercentFromX(touch.clientX));
+            }
+        }
         isDragging = false;
+        isTrackingTouch = false;
+        isHorizontalGesture = false;
         sliderWrapper.classList.remove('is-dragging');
     });
 
@@ -732,11 +904,11 @@ function initRajbariSlider() {
         });
     }
 
-    if (btnSketch) btnSketch.addEventListener('click', () => setSliderPercent(98));
-    if (btnSplit) btnSplit.addEventListener('click', () => setSliderPercent(50));
-    if (btnDecay) btnDecay.addEventListener('click', () => setSliderPercent(2));
+    if (btnSketch) btnSketch.addEventListener('click', () => setSliderPercent(98, btnSketch));
+    if (btnSplit) btnSplit.addEventListener('click', () => setSliderPercent(50, btnSplit));
+    if (btnDecay) btnDecay.addEventListener('click', () => setSliderPercent(2, btnDecay));
 
-    // Initialize at 50%
-    setSliderPercent(50);
+    // Initialize at 50% comparison with active state
+    setSliderPercent(50, btnSplit);
 }
 

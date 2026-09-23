@@ -1039,12 +1039,19 @@ body {
 /* Map Interactive Radar Pins */
 .map-pin {
     position: absolute;
-    width: 32px;
-    height: 32px;
+    width: 36px;
+    height: 36px;
     transform: translate(-50%, -50%);
     cursor: pointer;
     z-index: 20;
     transition: transform var(--transition-fast);
+}
+
+.map-pin::before {
+    content: '';
+    position: absolute;
+    inset: -8px;
+    border-radius: 50%;
 }
 
 .map-pin:hover {
@@ -1055,12 +1062,14 @@ body {
     position: absolute;
     top: 50%;
     left: 50%;
-    width: 100%;
-    height: 100%;
+    width: 24px;
+    height: 24px;
     transform: translate(-50%, -50%);
     border-radius: 50%;
     border: 2px solid var(--gold-light);
-    animation: radarPulse 2.2s infinite;
+    animation: radarPulse 2.2s infinite ease-out;
+    pointer-events: none;
+    will-change: transform, opacity;
 }
 
 .pin-center-dot {
@@ -1913,11 +1922,11 @@ body {
 }
 
 /* ==========================================================================
-   Animations
+   Hardware-Accelerated Animations (Zero Reflows)
    ========================================================================== */
 @keyframes subtleZoom {
     0% { transform: scale(1.02); }
-    100% { transform: scale(1.08); }
+    100% { transform: scale(1.06); }
 }
 
 @keyframes pulseGlow {
@@ -1927,60 +1936,17 @@ body {
 }
 
 @keyframes radarPulse {
-    0% { width: 14px; height: 14px; opacity: 1; }
-    100% { width: 44px; height: 44px; opacity: 0; }
+    0% { transform: translate(-50%, -50%) scale(0.6); opacity: 1; }
+    100% { transform: translate(-50%, -50%) scale(2.2); opacity: 0; }
 }
 
 @keyframes fadeInCard {
-    from { opacity: 0; transform: translateY(15px); }
+    from { opacity: 0; transform: translateY(12px); }
     to { opacity: 1; transform: translateY(0); }
 }
 
 /* ==========================================================================
-   Responsive Media Queries
-   ========================================================================== */
-@media (max-width: 1024px) {
-    .realm-item {
-        grid-template-columns: 1fr;
-        gap: 2.5rem;
-    }
-    .realm-item.reverse {
-        direction: ltr;
-    }
-    .footer-content {
-        grid-template-columns: 1fr;
-        gap: 2.5rem;
-    }
-}
-
-@media (max-width: 768px) {
-    .nav-links {
-        display: none;
-    }
-    .mobile-toggle {
-        display: block;
-    }
-    .hero-stats-bar {
-        grid-template-columns: 1fr;
-        gap: 1rem;
-    }
-    .memory-form {
-        grid-template-columns: 1fr;
-    }
-    .soundscape-ambient-bar {
-        flex-direction: column;
-        align-items: flex-start;
-    }
-    .certificate-frame {
-        padding: 2rem 1.2rem;
-    }
-    .cert-holder-name {
-        font-size: 1.8rem;
-    }
-}
-
-/* ==========================================================================
-   Rajbari Courtyard Before & After Slider (CSS clip-path & Vintage Key Handle)
+   Rajbari Courtyard Before & After Slider (Base Desktop & Component Styles)
    ========================================================================== */
 .rajbari-slider-showcase {
     margin-top: 3.5rem;
@@ -2033,7 +1999,7 @@ body {
     overflow: hidden;
     user-select: none;
     -webkit-user-select: none;
-    touch-action: none;
+    touch-action: pan-y;
     cursor: ew-resize;
     border: 1px solid var(--gold-primary);
     box-shadow: 0 15px 45px rgba(0, 0, 0, 0.9);
@@ -2066,7 +2032,6 @@ body {
     -webkit-clip-path: polygon(0 0, var(--clip-pos) 0, var(--clip-pos) 100%, 0 100%);
     clip-path: polygon(0 0, var(--clip-pos) 0, var(--clip-pos) 100%, 0 100%);
     will-change: clip-path, -webkit-clip-path;
-    transition: clip-path 0.04s ease-out, -webkit-clip-path 0.04s ease-out;
 }
 
 /* Vintage Key Slider Handle */
@@ -2079,7 +2044,6 @@ body {
     z-index: 10;
     pointer-events: none;
     transform: translateX(-50%);
-    transition: left 0.04s ease-out;
     will-change: left;
 }
 
@@ -2117,6 +2081,7 @@ body {
     justify-content: center;
     pointer-events: auto;
     cursor: ew-resize;
+    touch-action: none;
     transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s;
 }
 
@@ -2190,7 +2155,7 @@ body {
     background: rgba(255, 255, 255, 0.04);
     border: 1px solid var(--border-subtle);
     color: var(--mist-dim);
-    padding: 0.5rem 1.2rem;
+    padding: 0.6rem 1.25rem;
     border-radius: var(--radius-full);
     font-size: 0.82rem;
     font-weight: 600;
@@ -2198,10 +2163,506 @@ body {
     transition: all 0.2s;
 }
 
-.preset-btn:hover {
-    background: rgba(139, 69, 19, 0.35);
+.preset-btn:hover,
+.preset-btn.active {
+    background: rgba(212, 175, 55, 0.2);
     border-color: var(--gold-primary);
     color: var(--gold-light);
     transform: translateY(-2px);
 }
+
+/* ==========================================================================
+   Responsive Tablet Breakpoint (1024px)
+   ========================================================================== */
+@media (max-width: 1024px) {
+    .realm-item {
+        grid-template-columns: 1fr;
+        gap: 2.5rem;
+    }
+    .realm-item.reverse {
+        direction: ltr;
+    }
+    .footer-content {
+        grid-template-columns: 1fr;
+        gap: 2.5rem;
+    }
+}
+
+/* ==========================================================================
+   Responsive Mobile Breakpoint & Android Performance Engine (<= 768px)
+   Eliminates all scrolling lag, jitter, traps, and visual clutter
+   ========================================================================== */
+@media (max-width: 768px) {
+    /* 1. Global Performance - disable expensive fixed repaints */
+    #dust-canvas,
+    .film-grain {
+        display: none !important;
+    }
+
+    .hero-bg-img {
+        animation: none !important;
+        transform: none !important;
+        filter: brightness(0.36) !important;
+        will-change: auto !important;
+    }
+
+    /* Offscreen rendering optimization - skip rendering offscreen realms until scrolled */
+    .realm-item,
+    .soundscape-section,
+    .vault-section,
+    .quest-section {
+        content-visibility: auto;
+        contain-intrinsic-size: 1px 650px;
+    }
+
+    /* 2. Replace costly backdrop-filters with clean, crisp, solid dark surfaces */
+    .nav-dock,
+    .timelens-card,
+    .map-wrapper-card,
+    .sound-trigger-card,
+    .soundscape-ambient-bar,
+    .vault-submission-wrap,
+    .quest-card,
+    .rajbari-slider-showcase,
+    .dossier-card,
+    .memory-postcard,
+    .modal-overlay {
+        backdrop-filter: none !important;
+        -webkit-backdrop-filter: none !important;
+        background: #11141b !important;
+        box-shadow: 0 4px 14px rgba(0, 0, 0, 0.65) !important;
+    }
+
+    /* 3. Section Spacing & Clean Typography */
+    .section {
+        padding: 50px 0 !important;
+    }
+    .hero-section {
+        padding: 95px 0 40px !important;
+        min-height: auto;
+    }
+    .hero-title {
+        font-size: clamp(2rem, 7.5vw, 2.5rem) !important;
+        letter-spacing: 0.5px !important;
+        line-height: 1.18 !important;
+    }
+    .hero-bengali-tagline {
+        font-size: 0.95rem !important;
+        margin-bottom: 0.8rem !important;
+    }
+    .hero-desc {
+        font-size: 0.98rem !important;
+        line-height: 1.6 !important;
+    }
+    .hero-stats-bar {
+        grid-template-columns: 1fr;
+        gap: 0.75rem;
+        padding: 1rem 1.2rem;
+        width: 100%;
+    }
+    .stat-num {
+        font-size: 1.5rem !important;
+    }
+    .hero-cta-group {
+        flex-direction: column;
+        width: 100%;
+        gap: 0.75rem;
+    }
+    .btn-primary, .btn-secondary {
+        width: 100%;
+        justify-content: center;
+        padding: 0.85rem 1.2rem;
+        font-size: 0.9rem;
+        min-height: 48px;
+    }
+
+    /* 4. Crystal-Clear Android Navigation & Responsive Menu */
+    .site-header {
+        top: 0;
+        left: 0;
+        width: 100%;
+        padding: 8px 12px;
+        background: rgba(10, 12, 16, 0.96);
+        border-bottom: 1px solid var(--border-subtle);
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.8);
+    }
+    .nav-dock {
+        padding: 0.4rem 0.8rem;
+        width: 100%;
+        border-radius: var(--radius-sm);
+        border: 1px solid rgba(212, 175, 55, 0.25);
+    }
+    .brand-title {
+        font-size: 0.88rem;
+        letter-spacing: 1px;
+    }
+    .brand-subtitle {
+        font-size: 0.55rem;
+    }
+    .nav-actions {
+        gap: 0.5rem;
+    }
+    .nav-audio-btn {
+        width: 36px;
+        height: 36px;
+        font-size: 0.85rem;
+    }
+    .mobile-toggle {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 40px;
+        height: 40px;
+        font-size: 1.4rem;
+        color: var(--gold-light);
+        background: rgba(255, 255, 255, 0.06);
+        border: 1px solid var(--border-subtle);
+        border-radius: var(--radius-sm);
+        cursor: pointer;
+        padding: 0;
+    }
+
+    /* Smooth Slide-Down Mobile Drawer */
+    .nav-links {
+        display: none;
+        position: fixed;
+        top: 58px;
+        left: 8px;
+        right: 8px;
+        width: auto;
+        background: #0f131b;
+        border: 1px solid var(--gold-primary);
+        border-radius: var(--radius-md);
+        padding: 1rem;
+        flex-direction: column;
+        gap: 0.5rem;
+        box-shadow: 0 15px 40px rgba(0, 0, 0, 0.95);
+        z-index: 500;
+        max-height: calc(100vh - 75px);
+        overflow-y: auto;
+    }
+    .nav-links.open {
+        display: flex !important;
+        animation: fadeInCard 0.22s ease-out;
+    }
+    .nav-link {
+        padding: 0.8rem 1rem;
+        font-size: 0.92rem;
+        font-weight: 600;
+        border-radius: var(--radius-sm);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        display: block;
+        color: var(--parchment);
+        text-decoration: none;
+        min-height: 44px;
+    }
+    .nav-link:active, .nav-link:hover {
+        background: rgba(212, 175, 55, 0.18);
+        color: var(--gold-light);
+    }
+
+    /* 5. Fluid Touch Sliders (100% Free Vertical Scrolling, No Touch Traps) */
+    .timelens-card,
+    .rajbari-slider-showcase {
+        padding: 1rem !important;
+        border-radius: var(--radius-md) !important;
+    }
+    .timelens-wrapper,
+    .rajbari-slider-wrapper {
+        touch-action: pan-y !important;
+        overscroll-behavior: contain !important;
+        aspect-ratio: 16 / 10 !important;
+        width: 100% !important;
+    }
+    .archeology-hud-telemetry {
+        font-size: 0.62rem !important;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.35rem;
+        padding: 0.5rem 0.75rem;
+    }
+    .timelens-controls-top {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.75rem;
+    }
+    .excavation-year-badge {
+        font-size: 0.72rem !important;
+        padding: 0.45rem 0.75rem !important;
+        text-align: center;
+    }
+
+    /* Mobile Segmented Control for Era Presets */
+    .timelens-presets,
+    .slider-presets-bar {
+        display: grid !important;
+        grid-template-columns: 1fr 1fr 1fr;
+        gap: 6px !important;
+        width: 100%;
+        margin-top: 0.8rem !important;
+    }
+    .btn-preset,
+    .preset-btn {
+        width: 100% !important;
+        padding: 0.65rem 0.25rem !important;
+        font-size: 0.72rem !important;
+        text-align: center !important;
+        border-radius: var(--radius-sm) !important;
+        min-height: 44px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .btn-preset.active,
+    .preset-btn.active {
+        background: var(--gold-primary) !important;
+        color: #0a0c10 !important;
+        border-color: var(--gold-light) !important;
+        font-weight: 700 !important;
+    }
+
+    /* Slider Handles & Compact Badges */
+    .handle-compass-disc,
+    .handle-key-disc {
+        width: 48px !important;
+        height: 48px !important;
+        touch-action: none !important;
+    }
+    .vintage-key-svg {
+        width: 22px !important;
+        height: 22px !important;
+    }
+    .timelens-caption-badge,
+    .era-badge {
+        font-size: 0.62rem !important;
+        padding: 0.32rem 0.55rem !important;
+        bottom: 8px !important;
+        letter-spacing: 0.5px !important;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 48%;
+    }
+    .badge-vintage, .badge-before {
+        left: 8px !important;
+    }
+    .badge-modern, .badge-after {
+        right: 8px !important;
+    }
+
+    /* 6. Realms Section Mobile View */
+    .realms-container {
+        gap: 3rem;
+    }
+    .realm-item {
+        gap: 1.5rem;
+    }
+    .realm-visual-frame {
+        aspect-ratio: 16 / 10;
+        width: 100%;
+    }
+    .realm-title {
+        font-size: 1.45rem !important;
+    }
+    .realm-bengali-title {
+        font-size: 1.05rem !important;
+    }
+    .realm-quote {
+        font-size: 0.95rem !important;
+        padding-left: 0.9rem !important;
+        margin: 0.8rem 0 !important;
+    }
+    .realm-body-text {
+        font-size: 0.9rem !important;
+        line-height: 1.65 !important;
+        margin-bottom: 1.2rem !important;
+    }
+    .meta-pill {
+        font-size: 0.7rem !important;
+        padding: 0.3rem 0.65rem !important;
+    }
+
+    /* 7. Cartography & Interactive Map */
+    .map-wrapper-card {
+        padding: 0.8rem !important;
+    }
+    .map-inner-container {
+        aspect-ratio: 16 / 11 !important;
+    }
+    .map-pin {
+        width: 38px !important;
+        height: 38px !important;
+    }
+    .map-pin::before {
+        inset: -12px !important;
+    }
+    .pin-tooltip {
+        display: none !important; /* Modal dossier opens on tap */
+    }
+    .map-legend-bar {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+        font-size: 0.78rem;
+    }
+
+    /* 8. Archival Dossier Modal Mobile Display */
+    .modal-overlay {
+        padding: 10px !important;
+    }
+    .dossier-card {
+        max-height: 88vh !important;
+        width: 96% !important;
+        border-radius: var(--radius-md) !important;
+    }
+    .dossier-header-img {
+        height: 170px !important;
+    }
+    .dossier-body {
+        padding: 1.2rem !important;
+    }
+    .dossier-title {
+        font-size: 1.35rem !important;
+    }
+    .dossier-bengali {
+        font-size: 1.05rem !important;
+        margin-bottom: 0.8rem !important;
+    }
+    .dossier-quote {
+        font-size: 0.95rem !important;
+        padding-left: 0.8rem !important;
+        margin-bottom: 1rem !important;
+    }
+    .dossier-text p {
+        font-size: 0.88rem !important;
+        line-height: 1.6 !important;
+        margin-bottom: 0.8rem !important;
+    }
+    .modal-close-btn {
+        width: 42px !important;
+        height: 42px !important;
+        top: 10px !important;
+        right: 10px !important;
+        background: rgba(14, 18, 24, 0.92) !important;
+        border: 1px solid var(--gold-primary) !important;
+        color: var(--gold-light) !important;
+    }
+
+    /* 9. Soundboard & Ambient Mixer */
+    .soundboard-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 0.75rem;
+    }
+    .sound-trigger-card {
+        padding: 1rem 0.6rem !important;
+        min-height: 100px;
+    }
+    .sound-icon-ring {
+        font-size: 1.5rem !important;
+        margin-bottom: 0.4rem;
+    }
+    .sound-card-title {
+        font-size: 0.84rem !important;
+    }
+    .sound-card-desc {
+        display: none !important;
+    }
+    .soundscape-ambient-bar {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 1rem;
+        padding: 1.2rem 1rem !important;
+    }
+    .ambient-controls {
+        width: 100%;
+    }
+    .volume-control-wrap {
+        width: 100%;
+        justify-content: space-between;
+    }
+    .volume-slider {
+        width: 60% !important;
+    }
+
+    /* 10. Memory Vault & Heritage Quest Forms */
+    .memory-form {
+        grid-template-columns: 1fr;
+        gap: 0.8rem;
+    }
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+        font-size: 16px !important; /* Prevents mobile browser auto-zoom glitch */
+        padding: 0.8rem 1rem !important;
+    }
+    .btn-submit-vault {
+        width: 100%;
+        min-height: 48px;
+        padding: 0.9rem !important;
+    }
+    .memory-postcard {
+        padding: 1.2rem !important;
+    }
+    .quest-card {
+        padding: 1.4rem 1rem !important;
+    }
+    .quest-question-text {
+        font-size: 1.15rem !important;
+    }
+    .quest-option {
+        min-height: 50px !important;
+        padding: 0.85rem 1rem !important;
+        font-size: 0.88rem !important;
+    }
+    .certificate-frame {
+        padding: 1.5rem 0.8rem !important;
+        border-width: 5px !important;
+    }
+    .cert-title {
+        font-size: 1.3rem !important;
+    }
+    .cert-holder-name {
+        font-size: 1.4rem !important;
+    }
+    .cert-actions-bar {
+        flex-direction: column;
+        width: 100%;
+        gap: 0.6rem;
+    }
+    .cert-actions-bar input,
+    .cert-actions-bar button {
+        width: 100% !important;
+        max-width: none !important;
+        min-height: 48px;
+    }
+}
+
+/* ==========================================================================
+   Small Phone Screen Adjustments (<= 480px)
+   ========================================================================== */
+@media (max-width: 480px) {
+    .container {
+        width: 94%;
+    }
+    .hero-title {
+        font-size: 1.85rem !important;
+    }
+    .btn-preset,
+    .preset-btn {
+        font-size: 0.68rem !important;
+        padding: 0.5rem 0.2rem !important;
+    }
+    .soundboard-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 0.5rem;
+    }
+    .vault-filter-tabs {
+        gap: 0.4rem;
+    }
+    .vault-filter-btn {
+        font-size: 0.72rem;
+        padding: 0.4rem 0.75rem;
+    }
+}
+
 
