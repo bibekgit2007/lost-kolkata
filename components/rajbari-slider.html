@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rajbari Courtyard Before & After Slider | Lost Kolkata</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700&family=Playfair+Display:ital,wght@0,600;1,400&family=Plus+Jakarta+Sans:wght@400;600;700&display=swap">
+    <style>
+        :root {
+            --bg-deep: #0a0c10;
+            --charcoal: #12151b;
+            --brick-red: #8B4513;
+            --tarnished-gold: #D4AF37;
+            --gold-light: #f5df93;
+            --mist-white: #eef2f7;
+            --clip-pos: 50%;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--bg-deep);
+            color: var(--mist-white);
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem 1rem;
+        }
+
+        .rajbari-slider-showcase {
+            width: 100%;
+            max-width: 1080px;
+            background: var(--charcoal);
+            border: 1px solid rgba(212, 175, 55, 0.4);
+            border-radius: 16px;
+            padding: 2.2rem;
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.85), 0 0 35px rgba(212, 175, 55, 0.15);
+            position: relative;
+        }
+
+        .showcase-header {
+            text-align: center;
+            margin-bottom: 1.8rem;
+        }
+
+        .showcase-eyebrow {
+            display: inline-block;
+            color: var(--tarnished-gold);
+            font-size: 0.75rem;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .showcase-title {
+            font-family: 'Cinzel Decorative', Georgia, serif;
+            font-size: clamp(1.6rem, 3.2vw, 2.4rem);
+            color: var(--mist-white);
+            margin-bottom: 0.5rem;
+        }
+
+        .showcase-desc {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: 1.05rem;
+            color: #c5cdd8;
+            max-width: 680px;
+            margin: 0 auto;
+        }
+
+        /* Before & After Slider Wrapper */
+        .rajbari-slider-wrapper {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 16 / 9;
+            border-radius: 12px;
+            overflow: hidden;
+            user-select: none;
+            -webkit-user-select: none;
+            touch-action: none;
+            cursor: ew-resize;
+            border: 1px solid var(--tarnished-gold);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.9);
+        }
+
+        /* Common image layer styling */
+        .slider-img-layer {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+
+        .slider-img-layer img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        /* 1. Base Layer (Right Side): 2026 Moss-Covered Ruin */
+        .layer-after {
+            z-index: 1;
+        }
+
+        /* 2. Overlay Layer (Left Side): 19th-Century B&W Sketch using CSS clip-path */
+        .layer-before {
+            z-index: 2;
+            -webkit-clip-path: polygon(0 0, var(--clip-pos) 0, var(--clip-pos) 100%, 0 100%);
+            clip-path: polygon(0 0, var(--clip-pos) 0, var(--clip-pos) 100%, 0 100%);
+            will-change: clip-path, -webkit-clip-path;
+            transition: clip-path 0.04s ease-out, -webkit-clip-path 0.04s ease-out;
+        }
+
+        /* Vintage Key Slider Handle */
+        .vintage-key-handle {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: var(--clip-pos);
+            width: 0;
+            z-index: 10;
+            pointer-events: none;
+            transform: translateX(-50%);
+            transition: left 0.04s ease-out;
+            will-change: left;
+        }
+
+        /* Brass divider vertical line */
+        .handle-divider-line {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 3px;
+            background: linear-gradient(
+                to bottom,
+                transparent,
+                var(--gold-light) 15%,
+                var(--tarnished-gold) 50%,
+                var(--gold-light) 85%,
+                transparent
+            );
+            box-shadow: 0 0 12px rgba(212, 175, 55, 0.8);
+        }
+
+        /* Custom Vintage Key Icon Ornament */
+        .handle-key-disc {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 66px;
+            height: 66px;
+            border-radius: 50%;
+            background: radial-gradient(circle, #2b1f13 0%, #11141c 100%);
+            border: 2px solid var(--tarnished-gold);
+            box-shadow: 0 0 25px rgba(0, 0, 0, 0.9), 0 0 15px rgba(212, 175, 55, 0.6);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            pointer-events: auto;
+            cursor: ew-resize;
+            transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s;
+        }
+
+        .handle-key-disc:hover,
+        .rajbari-slider-wrapper.is-dragging .handle-key-disc {
+            transform: translate(-50%, -50%) scale(1.12);
+            box-shadow: 0 0 35px rgba(212, 175, 55, 0.9);
+            border-color: var(--gold-light);
+        }
+
+        .vintage-key-svg {
+            width: 34px;
+            height: 34px;
+            fill: var(--gold-light);
+            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.8));
+            transform: rotate(-45deg);
+        }
+
+        /* Era Badges */
+        .era-badge {
+            position: absolute;
+            bottom: 20px;
+            padding: 0.5rem 1.1rem;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            z-index: 5;
+            pointer-events: none;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.7);
+        }
+
+        .badge-before {
+            left: 20px;
+            background: rgba(240, 230, 210, 0.92);
+            color: #1a1611;
+            border: 1px solid var(--tarnished-gold);
+        }
+
+        .badge-after {
+            right: 20px;
+            background: rgba(18, 28, 18, 0.88);
+            color: #bbf2be;
+            border: 1px solid #4a9e52;
+        }
+
+        /* Accessible Hidden Range Input for Keyboard Control */
+        .slider-sr-input {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            opacity: 0;
+            cursor: ew-resize;
+            z-index: 15;
+            margin: 0;
+        }
+
+        /* Quick Preset Buttons */
+        .slider-presets-bar {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 0.8rem;
+            margin-top: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .preset-btn {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            color: #c5cdd8;
+            padding: 0.5rem 1.2rem;
+            border-radius: 9999px;
+            font-size: 0.82rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .preset-btn:hover {
+            background: rgba(139, 69, 19, 0.35);
+            border-color: var(--tarnished-gold);
+            color: var(--gold-light);
+            transform: translateY(-2px);
+        }
+
+        @media (max-width: 768px) {
+            .rajbari-slider-showcase {
+                padding: 1.4rem;
+            }
+            .era-badge {
+                font-size: 0.7rem;
+                padding: 0.4rem 0.8rem;
+                bottom: 12px;
+            }
+            .handle-key-disc {
+                width: 52px;
+                height: 52px;
+            }
+            .vintage-key-svg {
+                width: 26px;
+                height: 26px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <section class="rajbari-slider-showcase">
+        <div class="showcase-header">
+            <span class="showcase-eyebrow">Archival Anatomy • North Kolkata Rajbari</span>
+            <h2 class="showcase-title">Echoes of Faded Grandeur</h2>
+            <p class="showcase-desc">
+                Drag the antique brass key to reveal the transition from an intact 19th-century architectural ink sketch to its moss-choked, crumbling sanctuary in 2026.
+            </p>
+        </div>
+
+        <div class="rajbari-slider-wrapper" id="rajbariSlider" role="region" aria-label="19th-century sketch vs 2026 moss-covered Rajbari before and after slider">
+            
+            <!-- Accessible Keyboard Range Input -->
+            <input type="range" class="slider-sr-input" id="srSliderRange" min="0" max="100" value="50" aria-label="Slide to compare 19th century sketch and 2026 ruin">
+
+            <!-- After Layer (Right/Background): 2026 Moss-Covered Ruin -->
+            <div class="slider-img-layer layer-after">
+                <img src="../assets/images/rajbari_decay_2026.jpg" alt="2026 North Kolkata Rajbari courtyard covered in banyan roots, moss, and decaying Corinthian columns">
+                <div class="era-badge badge-after">Current State • 2026 CE (Moss & Ruins)</div>
+            </div>
+
+            <!-- Before Layer (Left/Foreground): 19th-Century B&W Etching with CSS clip-path -->
+            <div class="slider-img-layer layer-before" id="layerBefore">
+                <img src="../assets/images/rajbari_sketch_1826.jpg" alt="19th-century architectural black-and-white ink sketch of pristine North Kolkata Rajbari courtyard">
+                <div class="era-badge badge-before">19th-Century Architectural Sketch</div>
+            </div>
+
+            <!-- Vintage Key Slider Handle -->
+            <div class="vintage-key-handle" id="sliderHandle">
+                <div class="handle-divider-line"></div>
+                <div class="handle-key-disc" title="Drag the antique key to reveal history">
+                    <!-- Custom Vintage Key SVG -->
+                    <svg class="vintage-key-svg" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <!-- Ornate Victorian Key Path -->
+                        <path d="M7 2C4.24 2 2 4.24 2 7C2 9.4 3.7 11.4 6 11.9V21C6 21.55 6.45 22 7 22H9C9.55 22 10 21.55 10 21V19H12C12.55 19 13 18.55 13 18V16H10V11.9C12.3 11.4 14 9.4 14 7C14 4.24 11.76 2 7 2ZM7 4C8.66 4 10 5.34 10 7C10 8.66 8.66 10 7 10C5.34 10 4 8.66 4 7C4 5.34 5.34 4 7 4ZM7 5.5C6.17 5.5 5.5 6.17 5.5 7C5.5 7.83 6.17 8.5 7 8.5C7.83 8.5 8.5 7.83 8.5 7C8.5 6.17 7.83 5.5 7 5.5Z"/>
+                    </svg>
+                </div>
+            </div>
+        </div>
+
+        <div class="slider-presets-bar">
+            <button class="preset-btn" onclick="setSliderPercent(98)">View 19th-Century Sketch</button>
+            <button class="preset-btn" onclick="setSliderPercent(50)">50 / 50 Dual Comparison</button>
+            <button class="preset-btn" onclick="setSliderPercent(2)">View 2026 Moss & Ruins</button>
+        </div>
+    </section>
+
+    <script>
+        const sliderWrapper = document.getElementById('rajbariSlider');
+        const srRange = document.getElementById('srSliderRange');
+
+        let isDragging = false;
+
+        function setSliderPercent(percent) {
+            const clamped = Math.max(0, Math.min(100, percent));
+            sliderWrapper.style.setProperty('--clip-pos', `${clamped}%`);
+            if (srRange) srRange.value = clamped;
+        }
+
+        function getPercent(e) {
+            const rect = sliderWrapper.getBoundingClientRect();
+            const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+            const x = clientX - rect.left;
+            return Math.max(0, Math.min(100, (x / rect.width) * 100));
+        }
+
+        // Pointer Events (Mouse, Touch, Pen)
+        sliderWrapper.addEventListener('pointerdown', (e) => {
+            isDragging = true;
+            sliderWrapper.classList.add('is-dragging');
+            sliderWrapper.setPointerCapture(e.pointerId);
+            setSliderPercent(getPercent(e));
+        });
+
+        sliderWrapper.addEventListener('pointermove', (e) => {
+            if (!isDragging) return;
+            requestAnimationFrame(() => setSliderPercent(getPercent(e)));
+        });
+
+        sliderWrapper.addEventListener('pointerup', (e) => {
+            isDragging = false;
+            sliderWrapper.classList.remove('is-dragging');
+            try { sliderWrapper.releasePointerCapture(e.pointerId); } catch(err) {}
+        });
+
+        sliderWrapper.addEventListener('pointercancel', (e) => {
+            isDragging = false;
+            sliderWrapper.classList.remove('is-dragging');
+        });
+
+        // Accessible Keyboard Range Input
+        if (srRange) {
+            srRange.addEventListener('input', (e) => {
+                setSliderPercent(parseFloat(e.target.value));
+            });
+        }
+
+        // Initialize at 50%
+        setSliderPercent(50);
+    </script>
+</body>
+</html>

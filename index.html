@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LOST KOLKATA — The Archaeology of a Vanished City | Web Competition</title>
+    
+    <!-- SEO & Metadata -->
+    <meta name="description" content="Beneath the Kolkata we know lies a city that time has almost erased. An award-winning immersive digital excavation exploring the lost rivers, ghost tramways, Battala presses, and cosmopolitan enclaves of 19th-century Calcutta.">
+    <meta name="keywords" content="Lost Kolkata, Calcutta Heritage, Adi Ganga, Calcutta Tramways, Battala Woodcuts, Tiretti Chinatown, Senate House, History of Kolkata, Digital Archaeology">
+    <meta name="author" content="Lost Kolkata Heritage Project">
+    <meta name="theme-color" content="#0a0c0f">
+
+    <!-- Open Graph / Social Sharing -->
+    <meta property="og:title" content="LOST KOLKATA — The Archaeology of a Vanished City">
+    <meta property="og:description" content="Beneath the modern asphalt lies a city time almost erased. Can you bring it back? Experience the interactive Time-Lens, 1890 cartography, and ambient soundscapes.">
+    <meta property="og:image" content="assets/images/hero.jpg">
+    <meta property="og:type" content="website">
+
+    <!-- Stylesheet -->
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+    <!-- Atmospheric Particle Dust Canvas -->
+    <canvas id="dust-canvas"></canvas>
+    <div class="film-grain"></div>
+
+    <!-- Floating Navigation Bar -->
+    <header class="site-header">
+        <nav class="nav-dock" aria-label="Main Navigation">
+            <a href="#" class="brand-wrapper" aria-label="Lost Kolkata Home">
+                <div class="brand-crest">🏛️</div>
+                <div class="brand-text-col">
+                    <span class="brand-title">LOST KOLKATA</span>
+                    <span class="brand-subtitle">হারিয়ে যাওয়া কলকাতা</span>
+                </div>
+            </a>
+
+            <ul class="nav-links" id="main-nav-links">
+                <li><a href="#timelens" class="nav-link">Time-Lens</a></li>
+                <li><a href="#realms" class="nav-link">5 Realms</a></li>
+                <li><a href="#cartography" class="nav-link">1890 Map</a></li>
+                <li><a href="#soundscape" class="nav-link">Soundscape</a></li>
+                <li><a href="#vault" class="nav-link">Memory Vault</a></li>
+                <li><a href="#quest" class="nav-link">Heritage Quest</a></li>
+            </ul>
+
+            <div class="nav-actions">
+                <button id="nav-ambient-toggle" class="nav-audio-btn" aria-label="Toggle 1890 Ambient Soundscape" title="Toggle 1890 Audio Atmosphere">
+                    🔊
+                </button>
+                <button class="mobile-toggle" id="mobile-menu-toggle" aria-label="Open navigation menu">☰</button>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <!-- Hero Section -->
+        <section class="hero-section" id="hero">
+            <div class="hero-bg-frame">
+                <img src="assets/images/hero.jpg" alt="19th-Century Calcutta Gaslit Dalhousie Square with Vintage Tram" class="hero-bg-img">
+                <div class="hero-gradient-overlay"></div>
+            </div>
+
+            <div class="container hero-content">
+                <div class="hero-eyebrow">Digital Archival Excavation • Web Competition Entry</div>
+                <h1 class="hero-title">
+                    LOST KOLKATA
+                    <span class="title-highlight">Echoes Beneath the Pavement</span>
+                </h1>
+                <p class="hero-bengali-tagline">"ধূলিধূসর ইতিহাসের অন্তরালে হারিয়ে যাওয়া মহিমান্বিত কলকাতা"</p>
+                <p class="hero-desc">
+                    Beneath the rumbling metro tunnels, the crowded flyovers, and neon hoardings lies a city that time has almost erased. A city of forgotten rivers, gaslit cobblestones, and intellectual revolutions. <br><strong>Can you bring it back?</strong>
+                </p>
+
+                <div class="hero-cta-group">
+                    <a href="#timelens" class="btn-primary" id="btn-hero-excavate">
+                        <span>🔍</span> Begin Excavation
+                    </a>
+                    <button class="btn-secondary" id="ambient-toggle-btn">
+                        <span>🎧</span> <span class="btn-text">Enable 1890s Soundscape</span>
+                    </button>
+                </div>
+
+                <div class="hero-stats-bar">
+                    <div class="stat-item">
+                        <span class="stat-num">1873</span>
+                        <span class="stat-lbl">Asia's First Tramway</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-num">108</span>
+                        <span class="stat-lbl">Lost Ghats & Shrines</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-num">1960</span>
+                        <span class="stat-lbl">Fallen Senate House</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Time-Lens Excavator Section (1826 Colonial Calcutta -> 2026 Modern Kolkata) -->
+        <section class="section timelens-section" id="timelens">
+            <div class="container">
+                <div class="section-header">
+                    <span class="section-tag">Digital Archaeology • Bicentennial Lens</span>
+                    <h2 class="section-title">The 1826 ➔ 2026 Time Slider</h2>
+                    <div class="divider-ornament">◆ ❖ ◆</div>
+                    <p class="section-desc">
+                        Peel through two centuries of time. Slide across to witness the transition from <strong>1826 colonial Calcutta</strong> (faded grandeur, horse-drawn carriages, and neoclassical porticos) to <strong>2026 modern Kolkata</strong> (bustling yellow taxis, glowing neon, and modern life).
+                    </p>
+                </div>
+
+                <div class="timelens-card">
+                    <!-- Digital Archaeology HUD Telemetry -->
+                    <div class="archeology-hud-telemetry">
+                        <div class="hud-item">
+                            <span class="hud-pulse-dot"></span>
+                            <span>DATA STREAM: 22°34'N 88°21'E // CHOWRINGHEE & ESPLANADE</span>
+                        </div>
+                        <div class="hud-item">
+                            <span>CHRONO-SCAN: BICENTENNIAL (1826 — 2026)</span>
+                        </div>
+                        <div class="hud-item">
+                            <span>STATUS: <span style="color: var(--gold-light);">SYNCHRONIZED (100%)</span></span>
+                        </div>
+                    </div>
+
+                    <div class="timelens-controls-top">
+                        <div class="excavation-year-badge" id="excavation-year-badge">
+                            Excavated: Era 1926 CE (Dual Era Bicentennial Intersect)
+                        </div>
+                        <div class="timelens-presets">
+                            <button class="btn-preset" id="btn-preset-1826">1826 Colonial Calcutta</button>
+                            <button class="btn-preset" id="btn-preset-split">1826 | 2026 Dual Era</button>
+                            <button class="btn-preset" id="btn-preset-2026">2026 Modern Kolkata</button>
+                        </div>
+                    </div>
+
+                    <div class="timelens-wrapper" id="timelens-wrapper" role="region" aria-label="Interactive time slider comparing 1826 colonial Calcutta with 2026 modern Kolkata">
+                        <!-- Modern 2026 Base Layer -->
+                        <div class="timelens-layer modern">
+                            <img src="assets/images/timelens_modern.jpg" alt="Modern Kolkata 2026 Esplanade street corner with yellow taxis, neon signage, and urban bustle" class="timelens-img">
+                            <div class="timelens-caption-badge badge-modern">Kolkata | 2026 CE (Modern Metropolis)</div>
+                        </div>
+
+                        <!-- 1826 Archival Revealed Layer -->
+                        <div class="timelens-layer vintage" id="timelens-vintage-layer">
+                            <img src="assets/images/timelens_vintage.jpg" alt="Colonial Calcutta 1826 Esplanade with neoclassical colonnades, horse carriages, and gaslight" class="timelens-img">
+                            <div class="timelens-caption-badge badge-vintage">Calcutta | 1826 CE (Faded Colonial Grandeur)</div>
+                        </div>
+
+                        <!-- Interactive Handle with Dual Year Markers -->
+                        <div class="timelens-handle" id="timelens-handle">
+                            <div class="handle-line"></div>
+                            <div class="handle-compass-disc" title="Slide to transition eras">
+                                <span style="font-size: 0.62rem; color: var(--gold-light); font-family: var(--font-mono);">1826</span>
+                                <span class="handle-arrow">⟷</span>
+                                <span style="font-size: 0.62rem; color: var(--mist-white); font-family: var(--font-mono);">2026</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="timelens-meter-container">
+                        <span class="meter-label">Excavation Chrono-Depth:</span>
+                        <div class="excavation-depth-bar">
+                            <div class="excavation-depth-fill" id="excavation-depth-fill"></div>
+                        </div>
+                        <span class="meter-label" id="meter-timespan-label">200-Year Bicentennial Span</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- The 5 Realms of Vanished Calcutta -->
+        <section class="section realms-section" id="realms">
+            <div class="container">
+                <div class="section-header">
+                    <span class="section-tag">Archival Chronicles</span>
+                    <h2 class="section-title">The Five Vanished Realms</h2>
+                    <div class="divider-ornament">◆ ❖ ◆</div>
+                    <p class="section-desc">
+                        Journey through the five distinct dimensions of a forgotten metropolis — from sacred forgotten waters to the roaring presses of the Bengal Renaissance.
+                    </p>
+                </div>
+
+                <div class="realms-container">
+                    <!-- Realm 1: Adi Ganga -->
+                    <article class="realm-item" id="realm-1">
+                        <div class="realm-visual-frame">
+                            <img src="assets/images/realm_adi_ganga.jpg" alt="Ancient Adi Ganga River with Terracotta Temples and Wooden Dingis" class="realm-img">
+                            <div class="realm-corner-flourish flourish-tl"></div>
+                            <div class="realm-corner-flourish flourish-tr"></div>
+                            <div class="realm-corner-flourish flourish-bl"></div>
+                            <div class="realm-corner-flourish flourish-br"></div>
+                        </div>
+                        <div class="realm-text-content">
+                            <span class="realm-number">Realm I • The Sacred Stream</span>
+                            <h3 class="realm-title">The Vanished River of Adi Ganga</h3>
+                            <h4 class="realm-bengali-title">আদি গঙ্গার স্মৃতি ও বিলুপ্ত ধারা</h4>
+                            <blockquote class="realm-quote">
+                                "Before British Calcutta was dreamed of, the sacred Ganga flowed not through the Hooghly's western channel, but right here."
+                            </blockquote>
+                            <p class="realm-body-text">
+                                The Adi Ganga was the original sacred channel of the Bhagirathi, carrying ancient pilgrim fleets and seafaring merchants from Adi Saptagram to the Bay of Bengal. Along its banks stood clusters of terracotta atchala Shiva temples, burning ghats, and groves of ancient banyans. Today, choked by silt and buried beneath concrete metro pillars as 'Tolly's Nullah', the sacred river that gave birth to the region's spiritual topography sleeps quietly beneath modern traffic.
+                            </p>
+                            <div class="realm-meta-tags">
+                                <span class="meta-pill">📍 Kalighat to Baruipur</span>
+                                <span class="meta-pill">⏳ 15th - 18th Century</span>
+                                <span class="meta-pill">🪷 108 Sacred Shrines</span>
+                            </div>
+                        </div>
+                    </article>
+
+                    <!-- Realm 2: Ghost Trams -->
+                    <article class="realm-item reverse" id="realm-2">
+                        <div class="realm-visual-frame">
+                            <img src="assets/images/realm_ghost_tram.jpg" alt="Vintage Wooden Calcutta Tram 412 in Rainy Chitpur Road" class="realm-img">
+                            <div class="realm-corner-flourish flourish-tl"></div>
+                            <div class="realm-corner-flourish flourish-tr"></div>
+                            <div class="realm-corner-flourish flourish-bl"></div>
+                            <div class="realm-corner-flourish flourish-br"></div>
+                        </div>
+                        <div class="realm-text-content">
+                            <span class="realm-number">Realm II • Iron & Mist</span>
+                            <h3 class="realm-title">The Whispering Tracks of Chitpur</h3>
+                            <h4 class="realm-bengali-title">চিৎপুরের ট্রাম ও লোহার চাকার গান</h4>
+                            <blockquote class="realm-quote">
+                                "The ting-ting of the bell was the heartbeat of Calcutta — a rhythm slower than time itself."
+                            </blockquote>
+                            <p class="realm-body-text">
+                                In 1873, Asia’s first tramway rumbled into life along Chitpur Road, drawn by majestic Clydesdale horses before being electrified in 1902 with teak-and-brass carriages. Route 36 cut through the heart of the old aristocracy, gliding past filigree iron balconies, attar merchants, and bustling sweetshops. As tracks are paved over in the name of speed, the ghost bells of Route 36 remain the eternal soundtrack of lost contemplation.
+                            </p>
+                            <div class="realm-meta-tags">
+                                <span class="meta-pill">🚋 Route 36 & Esplanade</span>
+                                <span class="meta-pill">⏳ Electrified 1902</span>
+                                <span class="meta-pill">🔔 Asia's Oldest Network</span>
+                            </div>
+                        </div>
+                    </article>
+
+                    <!-- Realm 3: Cosmopolitan Mosaic -->
+                    <article class="realm-item" id="realm-3">
+                        <div class="realm-visual-frame">
+                            <img src="assets/images/realm_cosmopolis.jpg" alt="Old Calcutta Tiretti Chinatown Morning Market and Synagogue" class="realm-img">
+                            <div class="realm-corner-flourish flourish-tl"></div>
+                            <div class="realm-corner-flourish flourish-tr"></div>
+                            <div class="realm-corner-flourish flourish-bl"></div>
+                            <div class="realm-corner-flourish flourish-br"></div>
+                        </div>
+                        <div class="realm-text-content">
+                            <span class="realm-number">Realm III • Global Crossroads</span>
+                            <h3 class="realm-title">The Mosaic of Tiretti & Bowbazar</h3>
+                            <h4 class="realm-bengali-title">তেরেত্তি বাজারের ভোর ও বহুসংস্কৃতির মেলবন্ধন</h4>
+                            <blockquote class="realm-quote">
+                                "Where the fragrance of steamed dim sum met the incense of Armenian liturgy and the chanting of Hebrew psalms."
+                            </blockquote>
+                            <p class="realm-body-text">
+                                Long before multiculturalism was a buzzword, central Calcutta was a harmonious refuge for the world. Around Tiretti Bazaar, Chinese immigrants founded India’s first Chinatown with dawn breakfast markets and clubhouses. Just steps away, the soaring gothic spires of Magen David Synagogue sheltered Baghdadi Jewish traders, while the Armenian Church of Holy Nazareth (1724) stood as a testament to the traders who flourished here even before Job Charnock.
+                            </p>
+                            <div class="realm-meta-tags">
+                                <span class="meta-pill">🥢 Tiretti Chinatown</span>
+                                <span class="meta-pill">✡️ Magen David & Beth El</span>
+                                <span class="meta-pill">🇦🇲 Armenian Street 1724</span>
+                            </div>
+                        </div>
+                    </article>
+
+                    <!-- Realm 4: Battala Press -->
+                    <article class="realm-item reverse" id="realm-4">
+                        <div class="realm-visual-frame">
+                            <img src="assets/images/realm_battala_press.jpg" alt="19th-century Battala Woodcut Printing Studio and Adda" class="realm-img">
+                            <div class="realm-corner-flourish flourish-tl"></div>
+                            <div class="realm-corner-flourish flourish-tr"></div>
+                            <div class="realm-corner-flourish flourish-bl"></div>
+                            <div class="realm-corner-flourish flourish-br"></div>
+                        </div>
+                        <div class="realm-text-content">
+                            <span class="realm-number">Realm IV • Ink & Revolution</span>
+                            <h3 class="realm-title">The Battala Press & The Golden Adda</h3>
+                            <h4 class="realm-bengali-title">বটতলার কাঠের খোদাই ও মুক্তচিন্তার বিপ্লব</h4>
+                            <blockquote class="realm-quote">
+                                "Raw shisham wood, sticky black ink, and satirical verses that shook the foundations of colonial authority."
+                            </blockquote>
+                            <p class="realm-body-text">
+                                Beneath the shadow of a colossal banyan tree in Chitpur flourished Battala — the birthplace of cheap, popular Bengali printing. Self-taught woodcut engravers carved vivid mythological icons and scathing social caricatures onto hardwood blocks. Around these presses emerged the famous Calcutta 'Adda': informal, marathon intellectual sessions over earthen cups of tea that birthed literature, poetry, and radical anti-colonial awakening.
+                            </p>
+                            <div class="realm-meta-tags">
+                                <span class="meta-pill">📖 Battala Woodblocks</span>
+                                <span class="meta-pill">☕ Coffee House Adda</span>
+                                <span class="meta-pill">🎨 Folk Bengal Art</span>
+                            </div>
+                        </div>
+                    </article>
+
+                    <!-- Realm 5: Fallen Palaces -->
+                    <article class="realm-item" id="realm-5">
+                        <div class="realm-visual-frame">
+                            <img src="assets/images/realm_rajbari.jpg" alt="Grand Courtyard of Crumbling North Calcutta Rajbari with Corinthian Pillars and Chandelier" class="realm-img">
+                            <div class="realm-corner-flourish flourish-tl"></div>
+                            <div class="realm-corner-flourish flourish-tr"></div>
+                            <div class="realm-corner-flourish flourish-bl"></div>
+                            <div class="realm-corner-flourish flourish-br"></div>
+                        </div>
+                        <div class="realm-text-content">
+                            <span class="realm-number">Realm V • The Black Town</span>
+                            <h3 class="realm-title">The Black Town & The Fallen Mansions</h3>
+                            <h4 class="realm-bengali-title">উত্তর কলকাতার বাবু বিলাস ও বিলুপ্ত রাজপ্রাসাদ</h4>
+                            <blockquote class="realm-quote">
+                                "The party never truly ended—it only sank into the shadows."
+                            </blockquote>
+                            <p class="realm-body-text" style="margin-bottom: 0.9rem;">
+                                Gaslight cut through the north Calcutta mist. Inside soaring courtyards, Bohemian chandeliers rained diamond fire across checkered marble. Wealthy Babus reclined on silver thrones, cloaked in spun Dacca muslin and embroidered shawls. Baijis danced. Sarods wept until dawn. French champagne poured into Belgian crystal, toasting fortunes forged along the sacred river.
+                            </p>
+                            <p class="realm-body-text" style="margin-bottom: 0.9rem;">
+                                Then, the music stopped. Fortunes fractured, and the golden age slipped into dusk. Today, silence rules the empty verandas. Sacred banyan roots slowly strangle colossal Corinthian columns. Wild ferns and moss claim the cracked masonry where governors once bowed to Bengali zamindars.
+                            </p>
+                            <p class="realm-body-text" style="margin-bottom: 1.4rem;">
+                                Yet the stones still remember. Step beneath the crumbling archways of Chitpur and Sovabazar. The scent of rain-soaked brick carries the faint trace of vintage attar and pipe smoke. A vanished empire of intellect and excess breathes quietly beneath the weeds. Listen closely. The echoes never died—they only retreated into the shadows.
+                            </p>
+                            <div class="realm-meta-tags">
+                                <span class="meta-pill">🏛️ Demolished Senate House</span>
+                                <span class="meta-pill">🌿 Sovabazar Thakur Dalan</span>
+                                <span class="meta-pill">🕯️ Bohemian Chandeliers</span>
+                                <span class="meta-pill">👑 19th-Century Babu Culture</span>
+                            </div>
+                        </div>
+                    </article>
+
+                    <!-- Interactive Rajbari Before & After Slider Component -->
+                    <div class="rajbari-slider-showcase">
+                        <div class="showcase-header">
+                            <span class="showcase-eyebrow">Archival Anatomy • North Kolkata Rajbari</span>
+                            <h3 class="showcase-title">Echoes of Faded Grandeur</h3>
+                            <p class="showcase-desc">
+                                Drag the vintage brass key below to peel between the 19th-century architectural ink etching and its current 2026 moss-covered sanctuary. Powered by CSS <code>clip-path</code>.
+                            </p>
+                        </div>
+
+                        <div class="rajbari-slider-wrapper" id="rajbariSlider" role="region" aria-label="19th-century sketch vs 2026 moss-covered Rajbari courtyard before and after slider">
+                            <input type="range" class="slider-sr-input" id="srSliderRange" min="0" max="100" value="50" aria-label="Slide to compare 19th-century sketch with 2026 moss-covered ruin">
+
+                            <!-- Base Layer (Right): 2026 Moss-Covered Ruin -->
+                            <div class="slider-img-layer layer-after">
+                                <img src="assets/images/rajbari_decay_2026.jpg" alt="2026 North Kolkata Rajbari courtyard covered in banyan roots, moss, and decaying Corinthian columns">
+                                <div class="era-badge badge-after">Current State • 2026 CE (Moss & Ruins)</div>
+                            </div>
+
+                            <!-- Overlay Layer (Left): 19th-Century B&W Etching with CSS clip-path -->
+                            <div class="slider-img-layer layer-before" id="layerBefore">
+                                <img src="assets/images/rajbari_sketch_1826.jpg" alt="19th-century architectural black-and-white ink sketch of pristine North Kolkata Rajbari courtyard">
+                                <div class="era-badge badge-before">19th-Century Architectural Sketch</div>
+                            </div>
+
+                            <!-- Vintage Key Slider Handle -->
+                            <div class="vintage-key-handle" id="sliderHandle">
+                                <div class="handle-divider-line"></div>
+                                <div class="handle-key-disc" title="Drag the antique key to reveal history">
+                                    <svg class="vintage-key-svg" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M7 2C4.24 2 2 4.24 2 7C2 9.4 3.7 11.4 6 11.9V21C6 21.55 6.45 22 7 22H9C9.55 22 10 21.55 10 21V19H12C12.55 19 13 18.55 13 18V16H10V11.9C12.3 11.4 14 9.4 14 7C14 4.24 11.76 2 7 2ZM7 4C8.66 4 10 5.34 10 7C10 8.66 8.66 10 7 10C5.34 10 4 8.66 4 7C4 5.34 5.34 4 7 4ZM7 5.5C6.17 5.5 5.5 6.17 5.5 7C5.5 7.83 6.17 8.5 7 8.5C7.83 8.5 8.5 7.83 8.5 7C8.5 6.17 7.83 5.5 7 5.5Z"/>
+                                    </svg>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="slider-presets-bar">
+                            <button class="preset-btn" id="btn-rajbari-sketch">View 19th-Century Sketch</button>
+                            <button class="preset-btn" id="btn-rajbari-split">50 / 50 Dual Comparison</button>
+                            <button class="preset-btn" id="btn-rajbari-decay">View 2026 Moss & Ruins</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Cartography of Shadows (Interactive 1890 Map) -->
+        <section class="section map-section" id="cartography">
+            <div class="container">
+                <div class="section-header">
+                    <span class="section-tag">Cartographic Archaeology</span>
+                    <h2 class="section-title">The Cartography of Shadows</h2>
+                    <div class="divider-ornament">◆ ❖ ◆</div>
+                    <p class="section-desc">
+                        Explore this authentic 19th-century cartographic map of Calcutta. Click on the pulsating golden survey pins to unearth the secret dossiers of vanished landmarks.
+                    </p>
+                </div>
+
+                <div class="map-wrapper-card">
+                    <div class="map-inner-container">
+                        <img src="assets/images/map_calcutta.jpg" alt="1848 Antique Hand-Drawn Map of Colonial Calcutta" class="map-background-img">
+
+                        <!-- Interactive Pins -->
+                        <div class="map-pin pin-soba" data-relic="senate-house" role="button" tabindex="0" aria-label="Senate House & Rajbaris">
+                            <div class="pin-radar-ring"></div>
+                            <div class="pin-center-dot"></div>
+                            <div class="pin-tooltip">Senate House & Rajbaris</div>
+                        </div>
+
+                        <div class="map-pin pin-chitpur" data-relic="chitpur-tram" role="button" tabindex="0" aria-label="Chitpur Tram Route 36">
+                            <div class="pin-radar-ring"></div>
+                            <div class="pin-center-dot"></div>
+                            <div class="pin-tooltip">Chitpur Tramway Route 36</div>
+                        </div>
+
+                        <div class="map-pin pin-tiretti" data-relic="tiretti-chinese" role="button" tabindex="0" aria-label="Tiretti Chinatown & Synagogues">
+                            <div class="pin-radar-ring"></div>
+                            <div class="pin-center-dot"></div>
+                            <div class="pin-tooltip">Tiretti Chinatown & Synagogues</div>
+                        </div>
+
+                        <div class="map-pin pin-adi" data-relic="adi-ganga" role="button" tabindex="0" aria-label="The Lost Adi Ganga">
+                            <div class="pin-radar-ring"></div>
+                            <div class="pin-center-dot"></div>
+                            <div class="pin-tooltip">The Lost Adi Ganga Channel</div>
+                        </div>
+
+                        <div class="map-pin pin-ghats" data-relic="hooghly-ghats" role="button" tabindex="0" aria-label="Hooghly Steamers & Baboo Ghat">
+                            <div class="pin-radar-ring"></div>
+                            <div class="pin-center-dot"></div>
+                            <div class="pin-tooltip">Hooghly Steamers & Baboo Ghat</div>
+                        </div>
+
+                        <div class="map-pin pin-senate" data-relic="battala-press" role="button" tabindex="0" aria-label="Battala Woodblock Press">
+                            <div class="pin-radar-ring"></div>
+                            <div class="pin-center-dot"></div>
+                            <div class="pin-tooltip">Battala Woodblock Press</div>
+                        </div>
+                    </div>
+
+                    <div class="map-legend-bar">
+                        <div class="legend-tip">
+                            <span>💡 Interactive Guide:</span> Click any radar point to inspect archaeological dossiers & listen to historical audio cues.
+                        </div>
+                        <div class="legend-tip">
+                            <span>🗺️ Cartographic Source:</span> Surveyor General of Bengal, Imperial Calcutta Series.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Soundscape Mixer Section -->
+        <section class="section soundscape-section" id="soundscape">
+            <div class="container">
+                <div class="section-header">
+                    <span class="section-tag">Audio Archaeology</span>
+                    <h2 class="section-title">The Soundscape of Lost Calcutta</h2>
+                    <div class="divider-ornament">◆ ❖ ◆</div>
+                    <p class="section-desc">
+                        Sound travels through time. Listen to synthesized acoustic artifacts of 1890s Calcutta, engineered directly in your browser using the Web Audio API.
+                    </p>
+                </div>
+
+                <div class="soundboard-grid">
+                    <div class="sound-trigger-card" id="snd-tram-bell" role="button" tabindex="0">
+                        <div class="sound-icon-ring">🔔</div>
+                        <h3 class="sound-card-title">Tram No. 36 Bell</h3>
+                        <p class="sound-card-desc">The resonant double-ting brass bell of vintage wooden tramcars on Chitpur.</p>
+                    </div>
+
+                    <div class="sound-trigger-card" id="snd-steamer-horn" role="button" tabindex="0">
+                        <div class="sound-icon-ring">🚢</div>
+                        <h3 class="sound-card-title">Hooghly Steam Foghorn</h3>
+                        <p class="sound-card-desc">Deep low-frequency horn of paddle steamers arriving at Baboo Ghat.</p>
+                    </div>
+
+                    <div class="sound-trigger-card" id="snd-temple-bell" role="button" tabindex="0">
+                        <div class="sound-icon-ring">🪔</div>
+                        <h3 class="sound-card-title">Adi Ganga Evening Chime</h3>
+                        <p class="sound-card-desc">Pure acoustic resonance of ancient bronze bells along the temple ghats.</p>
+                    </div>
+
+                    <div class="sound-trigger-card" id="snd-press-click" role="button" tabindex="0">
+                        <div class="sound-icon-ring">📰</div>
+                        <h3 class="sound-card-title">Battala Wooden Press</h3>
+                        <p class="sound-card-desc">The rhythmic wooden clack of hand-cranked 19th-century letterpresses.</p>
+                    </div>
+                </div>
+
+                <div class="soundscape-ambient-bar">
+                    <div class="ambient-info">
+                        <div class="sound-waveform-anim">
+                            <span class="wave-bar"></span>
+                            <span class="wave-bar"></span>
+                            <span class="wave-bar"></span>
+                            <span class="wave-bar"></span>
+                        </div>
+                        <div>
+                            <h4>Continuous Monsoon & Twilight Atmosphere</h4>
+                            <p>Synthesized real-time rainfall on terracotta roof tiles and meditative dusk drone.</p>
+                        </div>
+                    </div>
+
+                    <div class="ambient-controls">
+                        <div class="volume-control-wrap">
+                            <span>🔈 Volume</span>
+                            <input type="range" min="0" max="1" step="0.05" value="0.5" class="volume-slider" id="ambient-volume-slider" aria-label="Master volume slider">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Memory Vault ("Bring It Back") -->
+        <section class="section vault-section" id="vault">
+            <div class="container">
+                <div class="section-header">
+                    <span class="section-tag">Community Heritage Archive</span>
+                    <h2 class="section-title">"Bring It Back" — The Memory Vault</h2>
+                    <div class="divider-ornament">◆ ❖ ◆</div>
+                    <p class="section-desc">
+                        A city lives in the stories of its people. Explore unearthed postcards from Calcutta's golden decades, or record your family's forgotten memory below.
+                    </p>
+                </div>
+
+                <div class="vault-filter-tabs">
+                    <button class="vault-filter-btn active" data-filter="all">All Memories</button>
+                    <button class="vault-filter-btn" data-filter="architecture">Architecture</button>
+                    <button class="vault-filter-btn" data-filter="flavors">Lost Flavors</button>
+                    <button class="vault-filter-btn" data-filter="streets">Streets & Trams</button>
+                    <button class="vault-filter-btn" data-filter="sounds">Sounds & River</button>
+                </div>
+
+                <div class="memory-vault-grid" id="memory-vault-list">
+                    <!-- Dynamic Postcards Inserted Here via JS -->
+                </div>
+
+                <!-- Submission Drawer -->
+                <div class="vault-submission-wrap">
+                    <h3 class="vault-sub-title">Contribute an Unearthed Memory</h3>
+                    <p class="vault-sub-desc">Do you have a family tale, a grandmother's recipe, or a memory of a demolished Kolkata mansion? Immortalize it in the archive.</p>
+
+                    <form class="memory-form" id="memory-form">
+                        <div class="form-group">
+                            <label class="form-label" for="mem-author">Your Name / Archivist</label>
+                            <input type="text" class="form-input" id="mem-author" required placeholder="e.g. Anirban Roy">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="mem-area">Kolkata Neighborhood / Landmark</label>
+                            <input type="text" class="form-input" id="mem-area" required placeholder="e.g. Sovabazar, Bowbazar, Strand Road">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="mem-era">Historical Era</label>
+                            <select class="form-select" id="mem-era">
+                                <option value="1800s">1800s Colonial Era</option>
+                                <option value="1920s">1920s Renaissance Era</option>
+                                <option value="1940s">1940s Post-War Decades</option>
+                                <option value="1970s">1970s Retro Calcutta</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="mem-category">Archive Category</label>
+                            <select class="form-select" id="mem-category">
+                                <option value="architecture">Architecture & Palaces</option>
+                                <option value="flavors">Lost Flavors & Food</option>
+                                <option value="streets">Streets & Trams</option>
+                                <option value="sounds">Sounds & Riverfront</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group full">
+                            <label class="form-label" for="mem-text">Your Memory or Oral History</label>
+                            <textarea class="form-textarea" id="mem-text" required placeholder="Describe the scene, the sights, the sounds, or the emotions of this vanished piece of Calcutta..."></textarea>
+                        </div>
+
+                        <div class="form-group full" style="text-align: center; margin-top: 1rem;">
+                            <button type="submit" class="btn-primary">
+                                <span>🪷</span> Archive This Memory Permanently
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </section>
+
+        <!-- The Calcutta Archivist Quest & Certificate -->
+        <section class="section quest-section" id="quest">
+            <div class="container">
+                <div class="section-header">
+                    <span class="section-tag">Interactive Challenge</span>
+                    <h2 class="section-title">The Calcutta Archivist Quest</h2>
+                    <div class="divider-ornament">◆ ❖ ◆</div>
+                    <p class="section-desc">
+                        Test your eye for the forgotten city. Answer four archaeological inquiries to earn your official Certificate of Heritage Stewardship.
+                    </p>
+                </div>
+
+                <div class="quest-card">
+                    <!-- Quiz Box -->
+                    <div id="quest-box">
+                        <div class="quest-header-meta">
+                            <span>Heritage Investigation</span>
+                            <span id="quest-progress-counter">Relic 1 of 4</span>
+                        </div>
+
+                        <h3 class="quest-question-text" id="quest-question-text">
+                            Loading archaeological inquiry...
+                        </h3>
+
+                        <div class="quest-options-grid" id="quest-options-container">
+                            <!-- Populated dynamically via JS -->
+                        </div>
+
+                        <div class="quest-explanation-box" id="quest-explanation"></div>
+
+                        <div style="text-align: right;">
+                            <button class="btn-primary" id="quest-next-btn" style="display: none;">
+                                Continue Investigation ➜
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Certificate Result Box -->
+                    <div id="certificate-result-box" style="display: none;">
+                        <div class="certificate-frame" id="printable-certificate">
+                            <div class="cert-seal">🏛️</div>
+                            <div class="cert-super-title">ARCHIVAL HERITAGE COMMISSION OF CALCUTTA</div>
+                            <h3 class="cert-title">CERTIFICATE OF HERITAGE STEWARDSHIP</h3>
+                            <p class="cert-present-text">This is proudly presented to</p>
+                            <div class="cert-holder-name" id="cert-holder-name">Custodian of Memory</div>
+                            <p class="cert-statement">
+                                In recognition of demonstrating exemplary historical acuity and commitment to excavating the lost memories, vanished waterways, and endangered architectural treasures of Calcutta.
+                            </p>
+
+                            <div class="cert-signatures">
+                                <div class="sig-col">
+                                    <div class="sig-title">REGISTRATION CODE</div>
+                                    <div class="sig-val" id="cert-reg-code">CAL-742918</div>
+                                </div>
+                                <div class="sig-col">
+                                    <div class="sig-title">OFFICIAL SEAL</div>
+                                    <div class="sig-val" style="color: #a93226;">★ APPROVED ARCHIVIST ★</div>
+                                </div>
+                                <div class="sig-col">
+                                    <div class="sig-title">DATE ISSUED</div>
+                                    <div class="sig-val" id="cert-date-issued">September 2026</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="cert-actions-bar">
+                            <input type="text" id="cert-name-input" class="form-input" style="max-width: 260px;" placeholder="Enter your full name">
+                            <button class="btn-primary" id="btn-issue-cert">Personalize Name</button>
+                            <button class="btn-secondary" id="btn-print-cert">🖨️ Print / Save PDF</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Historical Dossier Modal -->
+    <div class="modal-overlay" id="dossier-modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+        <div class="dossier-card">
+            <button class="modal-close-btn" id="modal-close-btn" aria-label="Close Dossier">✕</button>
+            <img src="assets/images/realm_adi_ganga.jpg" alt="Historical Dossier Relic View" class="dossier-header-img" id="modal-image">
+            <div class="dossier-body">
+                <div class="dossier-meta-row">
+                    <span id="modal-period">18th Century</span>
+                    <span>•</span>
+                    <span id="modal-coords">22.5218° N, 88.3482° E</span>
+                </div>
+                <h3 class="dossier-title" id="modal-title">Dossier Title</h3>
+                <h4 class="dossier-bengali" id="modal-bengali">বাংলা শিরোনাম</h4>
+                <blockquote class="dossier-quote" id="modal-quote">
+                    "Historical testimonial..."
+                </blockquote>
+                <div class="dossier-content" id="modal-text">
+                    <p>Historical detailed report content...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Success Toast for Memory Submission -->
+    <div class="vault-toast" id="vault-success-toast">
+        ✓ Your memory has been permanently archived in the vault!
+    </div>
+
+    <!-- Footer -->
+    <footer class="site-footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <h3>LOST KOLKATA</h3>
+                    <p>
+                        A digital excavation dedicated to preserving the endangered heritage, oral histories, and lost architectural wonders of Calcutta. Built with passion for the web development competition.
+                    </p>
+                    <p style="margin-top: 1rem; font-style: italic; color: var(--gold-light); font-size: 0.88rem;">
+                        "The city that was never just bricks and mortar, but a living poem written in mist and tea smoke."
+                    </p>
+                </div>
+
+                <div class="footer-col">
+                    <h4>The Realms</h4>
+                    <ul class="footer-links">
+                        <li><a href="#realm-1">The Sacred Adi Ganga</a></li>
+                        <li><a href="#realm-2">The Chitpur Ghost Trams</a></li>
+                        <li><a href="#realm-3">The Tiretti Cosmopolis</a></li>
+                        <li><a href="#realm-4">The Battala Presses</a></li>
+                        <li><a href="#realm-5">The Fallen Senate House</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-col">
+                    <h4>Interactive Tools</h4>
+                    <ul class="footer-links">
+                        <li><a href="#timelens">Time-Lens Excavator</a></li>
+                        <li><a href="#cartography">1890 Antique Map</a></li>
+                        <li><a href="#soundscape">Web Audio Soundscape</a></li>
+                        <li><a href="#vault">Memory Vault</a></li>
+                        <li><a href="#quest">Archivist Certificate</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <div>© 2026 Lost Kolkata Project. Dedicated to the soul of Calcutta.</div>
+                <div>Web Development Competition Showcase • 100% Native Web Standards</div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Core Scripts -->
+    <script src="js/audio-engine.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>
