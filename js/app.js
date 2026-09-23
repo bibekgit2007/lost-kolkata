@@ -132,26 +132,34 @@ function initTimeLens() {
             else setPresetActive(null);
         }
 
+        function toBengaliNumerals(num) {
+            const bengaliDigits = ['০', '১', '২', '৩', '৪', '৫', '৬', '৭', '৮', '৯'];
+            return String(num).replace(/[0-9]/g, d => bengaliDigits[d]);
+        }
+
         // 0% (right) = 2026 Modern -> 100% (left revealed) = 1826 Colonial Calcutta
         const yearsUnearthed = Math.round((clamped / 100) * 200);
         const year = Math.round(2026 - yearsUnearthed);
 
         if (indicator) {
             if (clamped >= 85) {
-                indicator.textContent = `Excavated: Era 1826 CE (Faded Colonial Grandeur)`;
+                indicator.textContent = `ঐতিহাসিক কালপর্ব: ১৮২৬ খ্রিস্টাব্দ • Colonial Calcutta (Faded Grandeur)`;
             } else if (clamped <= 15) {
-                indicator.textContent = `Surface: Era 2026 CE (Modern Kolkata Metropolis)`;
+                indicator.textContent = `বর্তমান কালপর্ব: ২০২৬ খ্রিস্টাব্দ • Modern Kolkata (Metropolis)`;
             } else {
-                indicator.textContent = `Chrono-Depth: Era ${year} CE (${yearsUnearthed} Years Unearthed)`;
+                indicator.textContent = `যুগসন্ধি: ${toBengaliNumerals(year)} খ্রিস্টাব্দ • Bicentennial Historical Intersect (${toBengaliNumerals(yearsUnearthed)} Years of Evolution)`;
             }
         }
 
-        if (depthMeter) {
-            depthMeter.style.width = `${clamped}%`;
-        }
-
-        if (timespanLabel) {
-            timespanLabel.textContent = `${yearsUnearthed} / 200 Years Excavated`;
+        // Dynamically highlight the active historical milestone step
+        const timelineSteps = document.querySelectorAll('.historical-timeline-scale .timeline-step');
+        if (timelineSteps && timelineSteps.length === 5) {
+            timelineSteps.forEach(step => step.classList.remove('highlight'));
+            if (clamped >= 80) timelineSteps[0].classList.add('highlight');
+            else if (clamped >= 60) timelineSteps[1].classList.add('highlight');
+            else if (clamped >= 40) timelineSteps[2].classList.add('highlight');
+            else if (clamped >= 20) timelineSteps[3].classList.add('highlight');
+            else timelineSteps[4].classList.add('highlight');
         }
     }
 
